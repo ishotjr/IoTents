@@ -36,6 +36,10 @@ const uint16_t primaryColors[] = {
 OledWingAdafruit display;
 
 
+int moisturePin = A0;
+int moistureValue = 0;
+
+
 void setup() {
 
   display.setup();
@@ -45,16 +49,20 @@ void setup() {
   matrix.begin();
   matrix.setBrightness(BRIGHTNESS);
 
+  pinMode(moisturePin, INPUT);
+  
 }
 
 void loop() {
+
+  moistureValue = analogRead(moisturePin);
 
   display.clearDisplay();
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("Hello, world!");
+  display.println(moistureValue);
   display.display();
 
 	display.loop();
