@@ -12,17 +12,38 @@
  */
 
 #include <oled-wing-adafruit.h>
+#include <Adafruit_DotStarMatrixRK.h>
 
+// for Adafruit_DotStarMatrix
 void setup();
 void loop();
-#line 10 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
+#line 12 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
+#define DATAPIN    D6
+#define CLOCKPIN   D8
+#define BRIGHTNESS 20
+
+Adafruit_DotStarMatrix matrix = Adafruit_DotStarMatrix(
+                                  12, 6, DATAPIN, CLOCKPIN,
+                                  DS_MATRIX_BOTTOM     + DS_MATRIX_LEFT +
+                                  DS_MATRIX_ROWS + DS_MATRIX_PROGRESSIVE,
+                                  DOTSTAR_BGR);
+
+const uint16_t primaryColors[] = {
+  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255)
+};
+
+
 OledWingAdafruit display;
+
 
 void setup() {
 
   display.setup();
   display.clearDisplay();
   display.display();
+
+  matrix.begin();
+  matrix.setBrightness(BRIGHTNESS);
 
 }
 
@@ -37,5 +58,12 @@ void loop() {
   display.display();
 
 	display.loop();
+
+  
+  for (byte i = 0; i < 3; i++) {
+    matrix.fillScreen(primaryColors[i]);
+    matrix.show();
+    delay(500);
+  }
 
 }
