@@ -17,6 +17,9 @@
 // for Adafruit_DotStarMatrix
 void setup();
 void loop();
+void probe();
+void local();
+void remote();
 #line 12 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
 #define DATAPIN    D6
 #define CLOCKPIN   D8
@@ -29,8 +32,11 @@ Adafruit_DotStarMatrix matrix = Adafruit_DotStarMatrix(
                                   DS_MATRIX_ROWS + DS_MATRIX_PROGRESSIVE,
                                   DOTSTAR_BGR);
 
-const uint16_t primaryColors[] = {
-  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255)
+const uint16_t colors[] = {
+  matrix.Color(255, 0, 0), // red
+  matrix.Color(0, 255, 0), // green
+  matrix.Color(0, 0, 255), // blue
+  matrix.Color(0, 0, 0)    // black
 };
 
 
@@ -43,6 +49,14 @@ OledWingAdafruit display;
 int moisturePin = A0;
 int moistureValue = 0;
 
+
+enum modes {
+  NONE,  // none selected
+  PROBE, // realtime soil analysis
+  LOCAL, // visual alert
+  REMOTE // visual alert + IFTTT
+};
+enum modes mode = NONE;
 
 void setup() {
 
@@ -63,30 +77,102 @@ void loop() {
 
 	display.loop();
 
+	if (display.pressedA()) {
+    mode = PROBE;
+  }
+	if (display.pressedB()) {
+    mode = LOCAL;
+  }
+	if (display.pressedC()) {
+    mode = REMOTE;
+  }
+
+  switch(mode) {
+
+    case PROBE:
+      display.clearDisplay();
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println("probe (TODO)");
+
+      matrix.fillScreen(colors[3]);
+
+      break;
+    case LOCAL:
+      local();
+      break;
+    case REMOTE:
+      display.clearDisplay();
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println("remote (TODO)");
+
+      matrix.fillScreen(colors[3]);
+
+      break;
+    default:
+      display.clearDisplay();
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println("A: probe");
+      display.println("B: here");
+      display.println("C: away");
+      // display.display();
+
+      matrix.fillScreen(colors[3]);
+  }
+
+  display.display();
+
+  matrix.show();
+
+}
+
+
+void probe() {
+
+  // TODO: probe
+
+}
+
+void local() {
+
+	//display.loop();
+
   display.clearDisplay();
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
+  display.println("LOCAL");
 
 	if (moistureValue < WET) {
     display.println("WET");
     matrix.setBrightness(MAX_BRIGHTNESS);
-    matrix.fillScreen(primaryColors[0]);
+    matrix.fillScreen(colors[0]);
   } else if (moistureValue < DAMP) {
     display.println("DAMP");
     matrix.setBrightness(BRIGHTNESS);
-    matrix.fillScreen(primaryColors[2]);
+    matrix.fillScreen(colors[2]);
   } else {
 		display.println("OK");
     matrix.setBrightness(BRIGHTNESS);
-    matrix.fillScreen(primaryColors[1]);
+    matrix.fillScreen(colors[1]);
   }
 
   display.println(moistureValue);
-  display.display();
+  //display.display();
 
-  matrix.show();
+  //matrix.show();
   //delay(500);
   
+}
+
+void remote() {
+
+  // TODO: remote
+
 }
