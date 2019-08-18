@@ -125,9 +125,40 @@ void loop() {
 
 void probe() {
 
-  display.println("probe (TODO)");
+  display.println("PROBE");
+  display.println(moistureValue);
 
+  matrix.setBrightness(MAX_BRIGHTNESS);
   matrix.fillScreen(colors[3]);
+
+  // dynamic moisture "graph"
+  byte pixelsTotal = 12 * 6;
+  byte pixelsLit = 0;
+  byte offset = 3;
+  for (byte i = 0; i < offset; i++) {
+    matrix.setPixelColor(i, 0, 255, 0);
+  }
+
+  if (moistureValue < WET) {
+
+    // fill remaining pixels
+    for (byte i = offset; i < pixelsTotal; i++) {
+      matrix.setPixelColor(i, 255, 0, 0);
+    }
+
+  } else if (moistureValue < DAMP) {
+
+    // illustrate range between damp and wet
+    byte dampness = moistureValue - DAMP;
+    pixelsLit = (float)((float)dampness / (DAMP - WET)) * (pixelsTotal - offset);
+
+    for (byte i = offset; i < pixelsLit; i++) {
+      matrix.setPixelColor(i, 0, 0, 255);
+    }
+
+  } else {
+    // do nothing - just initial green offset
+  }
 
 }
 
