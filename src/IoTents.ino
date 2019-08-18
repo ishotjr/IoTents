@@ -34,8 +34,10 @@ OledWingAdafruit display;
 
 #define DAMP 3300
 #define WET 3000
+#define NOTIFY_INTERVAL 5 * 1000 //TODO: 60 * 1000
 int moisturePin = A0;
 int moistureValue = 0;
+unsigned long lastNotify = 0;
 
 
 enum modes {
@@ -116,32 +118,53 @@ void probe() {
 
 }
 
-void local() {
+void monitor(bool notify) {
 
-  display.println("LOCAL");
+  unsigned long now = millis();
 
 	if (moistureValue < WET) {
     display.println("WET");
     matrix.setBrightness(MAX_BRIGHTNESS);
     matrix.fillScreen(colors[0]);
+
+    if (notify) {
+      
+      if ((now - lastNotify) >= NOTIFY_INTERVAL) {
+        // reset interval to prevent SPAM
+        lastNotify = now;
+        display.println("!!!NOTIFY!!!");
+      }
+
+    }
   } else if (moistureValue < DAMP) {
     display.println("DAMP");
     matrix.setBrightness(BRIGHTNESS);
     matrix.fillScreen(colors[2]);
+
+    // reset interval
+    lastNotify = now;
   } else {
 		display.println("OK");
     matrix.setBrightness(BRIGHTNESS);
     matrix.fillScreen(colors[1]);
+
+    lastNotify = now;
   }
 
   display.println(moistureValue);
   
 }
 
+void local() {
+
+  display.println("LOCAL");
+  monitor(false);
+
+}
+
 void remote() {
 
-      display.println("remote (TODO)");
-
-      matrix.fillScreen(colors[3]);
+  display.println("REMOTE");
+  monitor(true);
 
 }
