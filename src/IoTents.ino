@@ -29,6 +29,8 @@ const uint16_t primaryColors[] = {
 OledWingAdafruit display;
 
 
+#define DAMP 3300
+#define WET 3000
 int moisturePin = A0;
 int moistureValue = 0;
 
@@ -57,24 +59,22 @@ void loop() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println(moistureValue);
 
-	if (display.pressedA()) {
-		display.println("A");
-    matrix.setBrightness(BRIGHTNESS);
+	if (moistureValue < WET) {
+    display.println("WET");
+    matrix.setBrightness(MAX_BRIGHTNESS);
     matrix.fillScreen(primaryColors[0]);
-  }
-	if (display.pressedB()) {
-    display.println("B");
+  } else if (moistureValue < DAMP) {
+    display.println("DAMP");
+    matrix.setBrightness(BRIGHTNESS);
+    matrix.fillScreen(primaryColors[2]);
+  } else {
+		display.println("OK");
     matrix.setBrightness(BRIGHTNESS);
     matrix.fillScreen(primaryColors[1]);
   }
-	if (display.pressedC()) {
-    display.println("C");
-    matrix.setBrightness(MAX_BRIGHTNESS);
-    matrix.fillScreen(primaryColors[2]);
-  }
 
+  display.println(moistureValue);
   display.display();
 
   matrix.show();
