@@ -12,6 +12,7 @@
 #define DATAPIN    D6
 #define CLOCKPIN   D8
 #define BRIGHTNESS 20
+#define MAX_BRIGHTNESS 100
 
 Adafruit_DotStarMatrix matrix = Adafruit_DotStarMatrix(
                                   12, 6, DATAPIN, CLOCKPIN,
@@ -24,6 +25,7 @@ const uint16_t primaryColors[] = {
 };
 
 
+//SYSTEM_THREAD(ENABLED);
 OledWingAdafruit display;
 
 
@@ -48,21 +50,34 @@ void loop() {
 
   moistureValue = analogRead(moisturePin);
 
+	display.loop();
+
   display.clearDisplay();
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.println(moistureValue);
-  display.display();
 
-	display.loop();
-
-  
-  for (byte i = 0; i < 3; i++) {
-    matrix.fillScreen(primaryColors[i]);
-    matrix.show();
-    delay(500);
+	if (display.pressedA()) {
+		display.println("A");
+    matrix.setBrightness(BRIGHTNESS);
+    matrix.fillScreen(primaryColors[0]);
+  }
+	if (display.pressedB()) {
+    display.println("B");
+    matrix.setBrightness(BRIGHTNESS);
+    matrix.fillScreen(primaryColors[1]);
+  }
+	if (display.pressedC()) {
+    display.println("C");
+    matrix.setBrightness(MAX_BRIGHTNESS);
+    matrix.fillScreen(primaryColors[2]);
   }
 
+  display.display();
+
+  matrix.show();
+  //delay(500);
+  
 }
