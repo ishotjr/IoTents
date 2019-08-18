@@ -34,7 +34,7 @@ OledWingAdafruit display;
 
 #define DAMP 3300
 #define WET 3000
-#define NOTIFY_INTERVAL 5 * 1000 //TODO: 60 * 1000
+#define NOTIFY_INTERVAL 60 * 1000
 int moisturePin = A0;
 int moistureValue = 0;
 unsigned long lastNotify = 0;
@@ -133,6 +133,8 @@ void monitor(bool notify) {
         // reset interval to prevent SPAM
         lastNotify = now;
         display.println("!!!NOTIFY!!!");
+        // send SMS via IFTTT
+        Particle.publish("WetWetWet");
       }
 
     }
