@@ -64,6 +64,10 @@ void loop() {
   moistureValue = analogRead(moisturePin);
 
 	display.loop();
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
 
 	if (display.pressedA()) {
     mode = PROBE;
@@ -78,37 +82,21 @@ void loop() {
   switch(mode) {
 
     case PROBE:
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0,0);
-      display.println("probe (TODO)");
-
-      matrix.fillScreen(colors[3]);
-
+      probe();
       break;
+
     case LOCAL:
       local();
       break;
+
     case REMOTE:
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0,0);
-      display.println("remote (TODO)");
-
-      matrix.fillScreen(colors[3]);
-
+      remote();
       break;
+
     default:
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0,0);
       display.println("A: probe");
       display.println("B: here");
       display.println("C: away");
-      // display.display();
 
       matrix.fillScreen(colors[3]);
   }
@@ -122,19 +110,14 @@ void loop() {
 
 void probe() {
 
-  // TODO: probe
+  display.println("probe (TODO)");
+
+  matrix.fillScreen(colors[3]);
 
 }
 
 void local() {
 
-	//display.loop();
-
-  display.clearDisplay();
-
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
   display.println("LOCAL");
 
 	if (moistureValue < WET) {
@@ -152,15 +135,13 @@ void local() {
   }
 
   display.println(moistureValue);
-  //display.display();
-
-  //matrix.show();
-  //delay(500);
   
 }
 
 void remote() {
 
-  // TODO: remote
+      display.println("remote (TODO)");
+
+      matrix.fillScreen(colors[3]);
 
 }
