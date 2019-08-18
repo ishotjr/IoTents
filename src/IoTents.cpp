@@ -6,22 +6,36 @@
 #line 1 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
 /*
  * Project IoTents
- * Description:
- * Author:
- * Date:
+ * Description: Particle Argon goes glamping
+ * Author: ishotjr
+ * Date: 201908xx
  */
 
-// setup() runs once, when the device is first turned on.
+#include <oled-wing-adafruit.h>
+
 void setup();
 void loop();
-#line 9 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
+#line 10 "/home/ishotjr/dev/IoTents/src/IoTents.ino"
+OledWingAdafruit display;
+
 void setup() {
-  // Put initialization like pinMode and begin functions here.
+
+  display.setup();
+  display.clearDisplay();
+  display.display();
 
 }
 
-// loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  // The core of your code will likely live here.
+
+  display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("Hello, world!");
+  display.display();
+
+	display.loop();
 
 }
